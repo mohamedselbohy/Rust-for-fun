@@ -1,3 +1,6 @@
+mod ownership;
+mod mutability;
+mod lifetime;
 /// ```rust
 /// let s: String = String::from("hello");
 /// 
@@ -29,8 +32,7 @@
 /// 
 /// to solve this problem, you can move the usage of s before the assignment to m. Or you can clone the value of s to m. (deep copy)
 fn main() {
-    let s = String::from("hello");
-    println!("{:?}",s); // the problem was using s after the end of its ownership to the value "hello" in the heap.
-    let m = s;
-    println!("{:?}",m);
+    //ownership::main();
+    //mutability::main();
+    lifetime::main();
 }
