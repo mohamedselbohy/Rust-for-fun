@@ -28,9 +28,9 @@ fn main() {
                 }
                 Some(ref mut p) => {
                     p.next = Some(node);
+                    ptr = &mut ptr.as_mut().unwrap().next;
                 }
             }
-            ptr = &mut ptr.as_mut().unwrap().next;
             i += 1;
             if i >= n {
                 break;
@@ -43,10 +43,10 @@ fn main() {
                 None => {
                     break;
                 }
-                Some(ref p) => {
+                Some(ref mut p) => {
                     print!("{} ", p.data);
+                    ptr = &mut p.next;
                 }
             }
-            ptr = &mut ptr.as_mut().unwrap().next;
         }
 }
