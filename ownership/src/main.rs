@@ -1,6 +1,6 @@
-mod ownership;
-mod mutability;
-mod lifetime;
+// mod ownership;
+// mod mutability;
+mod slicing;
 /// ```rust
 /// let s: String = String::from("hello");
 /// 
@@ -34,5 +34,5 @@ mod lifetime;
 fn main() {
     //ownership::main();
     //mutability::main();
-    lifetime::main();
+    slicing::main();
 }
