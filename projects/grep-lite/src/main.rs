@@ -1,6 +1,6 @@
-// use std::io;
 use grep_lite::{show_usage, stderr_out};
-use std::{collections::HashMap, env};
+use std::{collections::HashMap, env, io};
+
 #[derive(Clone, Copy)]
 struct Opt {
     max_frequency: u8,
@@ -79,13 +79,12 @@ fn main() {
                     .as_str(),
                 );
                 show_usage();
-            } 
+            }
             let mut opt_args =
                 args[ind + 1..(ind + option.argument_count as usize + 1 as usize)].to_vec();
             let opt_len = opt_args.len();
             for argument in &opt_args {
-                if argument.starts_with('-')
-                {
+                if argument.starts_with('-') {
                     stderr_out(
                         format!(
                             "The option `{}` needs {} argument{}!",
@@ -109,10 +108,31 @@ fn main() {
             }
         }
     }
+
     if parameters.len() < PARAMETER_SIZE as usize {
-        stderr_out(format!("You have to enter at least {} matching parameter{}!", PARAMETER_SIZE, if PARAMETER_SIZE > 1 { 's' } else { '\0' }).as_str());
+        stderr_out(
+            format!(
+                "You have to enter at least {} matching parameter{}!",
+                PARAMETER_SIZE,
+                if PARAMETER_SIZE > 1 { 's' } else { '\0' }
+            )
+            .as_str(),
+        );
         show_usage();
     }
-    todo!("choose mode between -f or reading from stdin. Then searching through input for pattern.");
-    //let _input = { let mut _in = String::new(); io::stdin().read_line(&mut _in).expect("Couldn't read text"); _in };
+
+    if options.get("-f").is_none() {
+        let input = {
+            let mut _in = String::new();
+            io::stdin().read_line(&mut _in).expect("Couldn't read text");
+            _in
+        };
+        grep_lite::print::print(grep_lite::stdio::search(
+            &parameters[0],
+            input.as_str(),
+            &options,
+        ));
+    } else {
+        // todo!("choose mode between -f or reading from stdin. Then searching through input for pattern.");
+    }
 }

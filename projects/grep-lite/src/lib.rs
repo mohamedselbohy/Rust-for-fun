@@ -1,6 +1,8 @@
 use ansi_term::Colour::Red;
 use std::io::{stderr, Write};
 use std::process::exit;
+pub mod stdio;
+pub mod print;
 pub fn stderr_out(msg: &str) {
     let stderr = stderr();
     let mut handle = stderr.lock();
