@@ -1,6 +1,8 @@
 use grep_lite::{show_usage, stderr_out};
+use std::io::IsTerminal;
+use std::process::exit;
 use std::{collections::HashMap, env, io};
-
+extern crate atty;
 #[derive(Clone, Copy)]
 struct Opt {
     max_frequency: u8,
@@ -122,17 +124,26 @@ fn main() {
     }
 
     if options.get("-f").is_none() {
-        let input = {
-            let mut _in = String::new();
-            io::stdin().read_line(&mut _in).expect("Couldn't read text");
-            _in
-        };
-        grep_lite::print::print(grep_lite::stdio::search(
-            &parameters[0],
-            input.as_str(),
-            &options,
-        ));
+        let mut line: usize = 1;
+        let referred = !atty::is(atty::Stream::Stdin);
+        loop {
+            let input = {
+                let mut _in = String::new();
+                let result = io::stdin().read_line(&mut _in).expect("Couldn't read text");
+                if result == 0 {
+                    break;
+                }
+                _in
+            };
+            let out = grep_lite::stdio::search(line, &parameters[0], input.as_str(), &options);
+            grep_lite::print::print(&out);
+            line = if out.len() == 0 {
+                line + 1
+            } else {
+                out[out.len() - 1].0 + 1
+            };
+        }
     } else {
-        // todo!("choose mode between -f or reading from stdin. Then searching through input for pattern.");
+        todo!("choose mode between -f or reading from stdin. Then searching through input for pattern.");
     }
 }
